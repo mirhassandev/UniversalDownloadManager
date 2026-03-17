@@ -43,8 +43,8 @@ Our application is designed for power users who demand speed, reliability, and p
 
 1. **Clone the Repository**
    ```bash
-   git clone https://github.com/mirhassanmarhamcare/YT-DLP.git
-   cd YT-DLP
+   git clone https://github.com/mirhassandev/UniversalDownloadManager.git
+   cd UniversalDownloadManager
    ```
 
 2. **Install Dependencies**
@@ -78,4 +78,4 @@ Our application is designed for power users who demand speed, reliability, and p
 This project is licensed under the ISC License - see the [LICENSE](LICENSE) file for details.
 
 ---
-Built with ❤️ by [Mir Hassan](https://github.com/mirhassanmarhamcare)
+Built with ❤️ by [Mir Hassan](https://github.com/mirhassandev)
