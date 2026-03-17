@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, dialog, shell, powerSaveBlocker } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, shell, powerSaveBlocker, nativeImage } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const { exec } = require('child_process');
@@ -20,6 +20,16 @@ function createWindow() {
             contextIsolation: false,
         },
     });
+
+    const iconPath = path.resolve(__dirname, 'asset', 'logo.png');
+    if (fs.existsSync(iconPath)) {
+        try {
+            const appIcon = nativeImage.createFromPath(iconPath);
+            mainWindow.setIcon(appIcon);
+        } catch (e) {
+            console.error("Failed to set icon:", e);
+        }
+    }
 
     mainWindow.loadFile('index.html');
 }
@@ -53,6 +63,11 @@ async function migrateData() {
 }
 
 app.whenReady().then(async () => {
+    // Set AppUserModelId for Windows taskbar icon consistency
+    if (process.platform === 'win32') {
+        app.setAppUserModelId('MediaExtractor.Universal');
+    }
+
     await db.initDb();
     await migrateData();
     createWindow();
@@ -146,16 +161,16 @@ ipcMain.on('select-sound-file', async (event, type) => {
 
 ipcMain.on('update-engine', (event) => {
     exec('pip install -U yt-dlp', (error) => {
-        event.reply('engine-update-result', { 
-            success: !error, 
-            message: error ? `Error: ${error.message}` : "Success: Core engine upgraded." 
+        event.reply('engine-update-result', {
+            success: !error,
+            message: error ? `Error: ${error.message}` : "Success: Core engine upgraded."
         });
     });
 });
 
 ipcMain.on('fetch-thumbnail', async (event, url) => {
     const https = require('https');
-    https.get(url, { headers: { 'User-Agent': 'Mozilla/5.0' }}, (res) => {
+    https.get(url, { headers: { 'User-Agent': 'Mozilla/5.0' } }, (res) => {
         const data = [];
         res.on('data', chunk => data.push(chunk));
         res.on('end', () => {
@@ -175,4 +190,4 @@ ipcMain.on('select-av-file', async (event) => {
     }
 });
 
-app.on('window-all-closed', () => { if (process.platform !== 'darwin') app.quit(); });
+app.on('window-all-closed', () => { if (process.platform !== 'darwin') app.quit(); });
