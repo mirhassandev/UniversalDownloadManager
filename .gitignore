@@ -1,0 +1,8 @@
+node_modules/
+resources/bin/
+*.mp4
+*.exe
+.env
+dist/
+build/
+.DS_Store
